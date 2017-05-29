@@ -74,3 +74,8 @@ sms_cleaned_corpus <- tm_map(sms_cleaned_corpus, stemDocument)
 sms_cleaned_corpus <- tm_map(sms_cleaned_corpus, stripWhitespace)
 
 
+# Data preparation - splitting text documents into words(Tokenization)
+
+# Create a data structure called a Document Term Matrix(DTM)
+
+sms_dtm <- DocumentTermMatrix(sms_cleaned_corpus)
