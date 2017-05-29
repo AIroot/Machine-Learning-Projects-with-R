@@ -77,5 +77,20 @@ sms_cleaned_corpus <- tm_map(sms_cleaned_corpus, stripWhitespace)
 # Data preparation - splitting text documents into words(Tokenization)
 
 # Create a data structure called a Document Term Matrix(DTM)
-
 sms_dtm <- DocumentTermMatrix(sms_cleaned_corpus)
+
+# Divide the data into a training set and a test set with ratio 75:25
+# The SMS messages are sorted in a random order.
+
+sms_dtm_train <- sms_dtm[1:4181, ]
+sms_dtm_test <- sms_dtm[4182:5574, ]
+
+# Create labels that are not stored in the DTM
+sms_train_lables <- sms_data[1:4181, ]$type
+sms_test_lables <- sms_data[4182:5574, ]$type
+
+# Compare the proportion of spam in the training and test data
+prop.table(table(sms_train_lables))
+prop.table(table(sms_test_lables))
+
+
