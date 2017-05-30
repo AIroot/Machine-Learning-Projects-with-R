@@ -78,7 +78,7 @@ sms_cleaned_corpus <- tm_map(sms_cleaned_corpus, stripWhitespace)
 
 # Create a data structure called a Document Term Matrix(DTM)
 sms_dtm <- DocumentTermMatrix(sms_cleaned_corpus)
-
+sms_dtm
 # Divide the data into a training set and a test set with ratio 75:25
 # The SMS messages are sorted in a random order.
 
@@ -93,4 +93,80 @@ sms_test_lables <- sms_data[4182:5574, ]$type
 prop.table(table(sms_train_lables))
 prop.table(table(sms_test_lables))
 
+# Visualizing text data using word clouds
+# The wordcloud package can be installed via the install.packages("wordcloud") and 
+# loaded with the library(wordcloud) command. 
+library(wordcloud)
 
+# Create wordcloud from a tm corpus object
+pal <-brewer.pal(8,"Dark2")
+wordcloud(sms_cleaned_corpus, min.freq=40, random.order = FALSE, colors=pal)
+
+# Create wordcloud for spam and ham data subsets
+spam <- subset(sms_data, type == "spam") 
+
+wordcloud(spam$text, max.word = 40, scale = c(4, 0.8), colors=pal)
+
+ham <- subset(sms_data, type == "ham")
+wordcloud(ham$text, max.word = 40, scale = c(4, 0.8), colors=pal)
+
+
+# Data preparation - Creating indicator features for frequent words
+sms_frequent_words <- findFreqTerms(sms_dtm_train, 5)
+str(sms_frequent_words)
+
+sms_dtm_freq_train<- sms_dtm_train[ , sms_frequent_words]
+sms_dtm_freq_test <- sms_dtm_test[ , sms_frequent_words]
+
+# print the most frequent words in each class. 
+
+sms_corpus_ham <- VCorpus(VectorSource(ham$text))
+sms_corpus_spam <- VCorpus(VectorSource(spam$text))
+
+sms_dtm_ham <- DocumentTermMatrix(sms_corpus_ham, control = list(tolower = TRUE,removeNumbers = TRUE,stopwords = TRUE,removePunctuation = TRUE,stemming = TRUE)) 
+sms_dtm_spam <- DocumentTermMatrix(sms_corpus_spam, control = list(tolower = TRUE,removeNumbers = TRUE,stopwords = TRUE,removePunctuation = TRUE,stemming = TRUE)) 
+
+sms_dtm_ham_frequent_words <- findFreqTerms(sms_dtm_ham, lowfreq= 0, highfreq = Inf)
+head(sms_dtm_ham_frequent_words)
+tail(sms_dtm_ham_frequent_words)
+
+sms_dtm_spam_frequent_words <- findFreqTerms(sms_dtm_spam, lowfreq= 0, highfreq = Inf)
+head(sms_dtm_spam_frequent_words)
+tail(sms_dtm_spam_frequent_words)
+
+
+# The following defines a convert_counts() function to convert counts to
+# Yes / No strings:
+
+convert_counts <- function(x) {
+	x <- ifelse(x > 0, "Yes", "No")
+}
+
+# Apply above function to train and test data sets. 
+sms_train <- apply(sms_dtm_freq_train, MARGIN = 2,convert_counts)
+sms_test <- apply(sms_dtm_freq_test, MARGIN = 2,convert_counts)
+
+# Training a model usig Naive Bayes
+library(e1071)
+sms_classifier <- naiveBayes(sms_train, sms_train_lables)
+
+
+# Evaluating model 
+sms_test_pred <- predict(sms_classifier, sms_test)
+library(gmodels)
+CrossTable(sms_test_pred, sms_test_lables,prop.chisq = FALSE, prop.t = FALSE,dnn = c('predicted', 'actual'))
+
+
+
+# Accuracy : Measures of performance
+library(caret)
+confusionMatrix(sms_test_pred, sms_test_lables, positive = "spam")
+
+# Improving model performance
+# Adding Laplace estimator 
+
+new_sms_classifier <- naiveBayes(sms_train, sms_train_lables, laplace = 1)
+new_sms_classifier_pred <- predict(new_sms_classifier, sms_test)
+
+# Compare the predicted classes to the actual classifications using cross table
+CrossTable(new_sms_classifier_pred, sms_test_lables, prop.chisq = FALSE, prop.t = FALSE, prop.r = FALSE, dnn = c('Predicted', 'Actual'))
