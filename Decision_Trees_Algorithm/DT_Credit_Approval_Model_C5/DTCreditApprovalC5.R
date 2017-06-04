@@ -156,3 +156,17 @@ summary(CreditData$credit_amount)
 # Check duration 
 summary(CreditData$mth_duration)
 
+# Data preparation - creating random training and test datasets
+# Create random sample
+# Divide the data into a training set and a test set randomly with ratio 90:10
+
+set.seed(123)
+train_sample <- sample(1000, 900)
+CreditData_train <- CreditData[train_sample, ]
+CreditData_test <- CreditData[-train_sample, ]
+
+# Check whether data set fairly even split
+prop.table(table(CreditData_train$class))
+
+prop.table(table(CreditData_test$class))
+
