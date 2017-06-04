@@ -202,3 +202,31 @@ CrossTable(CreditData_test$class, CreditData_predict, prop.chisq = FALSE, prop.c
 library(caret)
 confusionMatrix(CreditData_test$class, CreditData_predict, positive = "good")
 
+# Improving model performance
+# Boosting the accuracy of decision trees
+# Add additional trials parameter indicating the number of
+# separate decision trees to use in the boosted team.
+CreditData_boost10 <- C5.0(CreditData_train[-21], CreditData_train$class, trials = 10)
+CreditData_boost10
+
+# See all 10 trees 
+summary(CreditData_boost10)
+
+CreditData_boost10_predict <- predict(CreditData_boost10, CreditData_test)
+CrossTable(CreditData_test$class, CreditData_boost10_predict, prop.chisq = FALSE, prop.c = FALSE, prop.r = FALSE, dnn = c('Actual Class', 'Predicted Class'))
+confusionMatrix(CreditData_test$class, CreditData_boost10_predict, positive = "good")
+
+
+# Making mistakes more costlier than others
+Matrix_dimensions <- list(c("bad", "good"), c("bad", "good"))
+names(Matrix_dimensions) <- c("Predicted", "Actual")
+
+Matrix_dimensions
+
+error_cost <- matrix(c(0,1,4,0), nrow = 2, dimnames = Matrix_dimensions)
+
+error_cost
+
+CreditData_cost <- C5.0(CreditData_train[-21], CreditData_train$class, costs = error_cost)
+CreditData_cost_predict <- predict(CreditData_cost, CreditData_test)
+CrossTable(CreditData_test$class, CreditData_cost_predict, prop.chisq=FALSE, prop.c = FALSE, prop.r=FALSE, dnn= c('Actual', 'Predicted'))
