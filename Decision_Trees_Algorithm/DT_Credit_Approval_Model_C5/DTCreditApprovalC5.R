@@ -184,3 +184,21 @@ CreditData_model
 # See the tree's decisions 
 summary(CreditData_model)
 
+# Evaluating model performance
+CreditData_predict <- predict(CreditData_model, CreditData_test)
+
+# Various R Programming Tools for Model Fitting
+library(gmodels)
+
+# create a cross tabulation indicating the agreement between the two vectors.
+# Specifying prop.chisq = FALSE will remove the unnecessary chi-square
+# values from the output.
+# Setting the prop.c and prop.r parameters to FALSE removes the column and row percentages
+# from the table. The remaining percentage ( prop.t ) indicates the proportion of
+# records in the cell out of the total number of records:
+CrossTable(CreditData_test$class, CreditData_predict, prop.chisq = FALSE, prop.c= FALSE, prop.r = FALSE, dnn = c('Actual class', 'Predicted class'))
+
+# Accuracy : Measures of performance
+library(caret)
+confusionMatrix(CreditData_test$class, CreditData_predict, positive = "good")
+
