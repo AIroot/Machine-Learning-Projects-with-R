@@ -33,9 +33,10 @@ CreditData$class <- ifelse(CreditData$class==1, "good","bad")
 CreditData$class = as.factor(CreditData$class)
 
 # Displays description of each variable
+
 head(CreditData)
 
-str(CreditData)
+# str(CreditData)
 
 # Use table() function to look output for a couple of loan features 
 # Attribute 1: (qualitative) 
@@ -169,4 +170,17 @@ CreditData_test <- CreditData[-train_sample, ]
 prop.table(table(CreditData_train$class))
 
 prop.table(table(CreditData_test$class))
+
+# Training a model on the data
+# The C5.0 package can be installed via the install.packages("C50") and 
+# loaded with the library(C50) command.
+library(C50)
+
+# Train model
+CreditData_model <- C5.0(CreditData_train[-21], CreditData_train$class)
+
+CreditData_model
+
+# See the tree's decisions 
+summary(CreditData_model)
 
