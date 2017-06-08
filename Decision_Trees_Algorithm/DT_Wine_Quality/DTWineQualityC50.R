@@ -9,33 +9,6 @@
 # Decision Trees
 # Source of Data Set:- UCI Repository - Wine Quality Data(https://archive.ics.uci.edu/ml/datasets/wine+quality)
 
-# required libraries
-# # The rpart package can be installed via the install.packages("rpart") and 
-# # loaded with the library(rpart) command.
-library(rpart) #recursive and partitioning trees
-
-# # The plotly package can be installed via the install.packages("plotly") and 
-# # loaded with the library(plotly) command.
-library(plotly) #data visualization
-
-# # The rpart.plot package can be installed via the install.packages("rpart.plot") and 
-# # loaded with the library(rpart.plot) command.
-library(rpart.plot)
-
-# # The rattle package can be installed via the install.packages("rattle") and 
-# # loaded with the library(rattle) command.
-library(rattle)
-
-# # The RColorBrewer package can be installed via the install.packages("RColorBrewer") and 
-# # loaded with the library(RColorBrewer) command.
-library(RColorBrewer)
-
-
-# # The RWeka package can be installed via the install.packages("RWeka") and 
-# # loaded with the library(RWeka) command.
-library(RWeka)
-
-
 # Exploring and preparing the data
 # Step 2: Exploring and preparing the data
 # Read the csv file into a data frame titled WineData.
@@ -44,30 +17,137 @@ WineData <- read.table("winequality-red.csv", sep=";", header=TRUE)
 head(WineData)
 table(WineData$quality)
 
-# Creating a categorical variable for wine quality (bad,good,normal)
-# Less than 6 quality level == bad
-# 6 quality level == normal
-# Greater than 6, quality level == good
-WineData$quality <- ifelse(WineData$quality == 3, "Lev_Three", ifelse(WineData$quality == 4, "Lev_Four", ifelse(WineData$quality == 5, "Lev_Five", ifelse(WineData$quality == 6, "Lev_Six", ifelse(WineData$quality == 7, "Lev_Seven", ifelse(WineData$quality == 8, "Lev_Eight", "Lev_Nine"))) )))
+
+# Identify missing values using graphical view. See the Rplot.pdf and red colour stripes indicate the missing values.  
+library(Amelia)
+missmap(WineData, main="Missing Data - Red Wine Quality", col=c("red","grey"), legend=FALSE)
+
+# Data Visualization
+# plot histogram of fixed acidity
+
+library(ggplot2) 
+
+ggplot(WineData, aes(x = fixed.acidity)) +
+  geom_histogram(binwidth = 0.1) +
+  scale_x_continuous(breaks = seq(4, 16, by = 1)) +
+  ggtitle("Fixed Acidity distribution") +
+  xlab("Fixed Acidity") +
+  ylab("Count")
+
+# plot histogram of Volatile Acidity
+plot1 <- ggplot(WineData, aes(x = volatile.acidity)) +
+  geom_histogram(binwidth = 0.02) +
+  scale_x_continuous(breaks = seq(0, 1.6, by = 0.1)) +
+  ggtitle("Volatile Acidity distribution") +
+  xlab("Volatile Acidity") +
+  ylab("Count")
+
+plot2 <- ggplot(WineData, aes(x = volatile.acidity)) +
+  geom_histogram(binwidth = 0.02) +
+  scale_x_log10(breaks = seq(0, 1.6, by = 0.5)) +
+  ggtitle("Volatile Acidity distribution") +
+  xlab("log(Volatile Acidity)") +
+  ylab("Count")
+
+# gridExtra: Miscellaneous Functions for "Grid" Graphics. 
+library(gridExtra)
+grid.arrange(plot1, plot2)
+
+
+# plot histogram of pH
+p1 <- ggplot(WineData, aes(x = pH)) +
+  geom_histogram(binwidth = 0.02) +
+  ggtitle("pH distribution") +
+  xlab("pH") +
+  ylab("Count")
+
+# plot histogram of Free SO2
+p2 <- ggplot(WineData, aes(x = free.sulfur.dioxide)) +
+  geom_histogram(binwidth = 1) +
+  ggtitle("Free SO2 distribution") +
+  xlab("Free SO2") +
+  ylab("Count")
+
+# plot histogram of Total SO2
+p3 <- ggplot(WineData, aes(x = total.sulfur.dioxide)) +
+  geom_histogram(binwidth = 3) +
+  ggtitle("Total SO2 distribution") +
+  xlab("Total SO2") +
+  ylab("Count")
+
+# plot histogram of Alcohol
+p4 <- ggplot(WineData, aes(x = alcohol)) +
+  geom_histogram(binwidth = 0.1) +
+  ggtitle("Alcohol distribution") +
+  xlab("Alcohol") +
+  ylab("Count")
+
+
+grid.arrange(p1, p2, p3, p4, ncol = 2)
+
+# plot histogram of Quality
+ggplot(WineData, aes(x = quality)) +
+  geom_histogram(binwidth = 1) +
+  scale_x_continuous(breaks = seq(3, 8, by = 1)) +
+  ggtitle("Quality Distributions") +
+  xlab("Quality") +
+  ylab("Count")
+
+# Positive correlation of alcohol and quality
+ggplot(WineData, aes(x = alcohol)) +
+  geom_density(aes(fill = "red", color = "red")) +
+  facet_wrap(~quality) +
+  theme(legend.position = "none") +
+  ggtitle("Alcohol VS Quality") +
+  xlab("Alcohol") +
+  ylab("Quality")
+
+
+# Negative correlation of volatile acidity and quality
+ggplot(WineData, aes(x = volatile.acidity)) +
+  geom_density(aes(fill = "red", color = "red")) +
+  facet_wrap(~quality) +
+  theme(legend.position = "none") +
+  ggtitle("Volatile Acidity VS Quality") +
+  xlab("Volatile Acidity") +
+  ylab("Quality")
+
+# Positive correlation of Free SO~2~ and Total SO~2~
+
+ggplot(WineData, aes(x = free.sulfur.dioxide, y = total.sulfur.dioxide)) +
+  geom_jitter(alpha = 1/5) +
+  ggtitle("Free S02 vs Total SO2") +
+  xlab("Free SO2") +
+  ylab("Total SO2")
+
+# residual sugar and quality relationship
+
+ggplot(WineData, aes(x = residual.sugar)) +
+  geom_density(aes(fill = "red", color = "red")) +
+  facet_wrap(~quality) +
+  theme(legend.position = "none") +
+  ggtitle("Residual Sugar VS Quality") +
+  xlab("Residual Sugar") +
+  ylab("Quality")
+
+# Density and Alchol 
+ggplot(WineData, aes(x = density, y = alcohol)) +
+  geom_jitter(alpha = 1/2) +
+  ggtitle("Density VS Alcohol") +
+  xlab("Density") +
+  ylab("Alcohol")
+
+
+# Creating a categorical variable for wine quality
+# WineData$quality <- ifelse(WineData$quality == 3, "Lev_Three", ifelse(WineData$quality == 4, "Lev_Four", ifelse(WineData$quality == 5, "Lev_Five", ifelse(WineData$quality == 6, "Lev_Six", ifelse(WineData$quality == 7, "Lev_Seven", ifelse(WineData$quality == 8, "Lev_Eight", "Lev_Nine"))) )))
+# WineData$quality <- as.factor(WineData$quality)
+# str(WineData)
+
+WineData$quality <- ifelse(WineData$quality < 5, 'bad', ifelse(WineData$quality > 6,'good','normal'))
 WineData$quality <- as.factor(WineData$quality)
-# WineData$taste <- ifelse(WineData$quality < 6, 'bad', 'good')
-# WineData$taste[WineData$quality == 6] <- 'normal'
-# WineData$taste <- as.factor(WineData$taste)
-# table(WineData$taste)
-str(WineData)
+str(WineData$quality)
 
-#Data Visualization(Use RStudio or web-browser to view following plots)
-# Histogram for wine quality level
-# histo <- plot_ly(data = WineData, x =~quality, type = "histogram")
-# histo
 
-# # Box plots
-# WineDataTemp <- WineData
-# # WineDataTemp$qualityLevels <- ifelse(WineDataTemp$quality == 3, "Lev_Three", ifelse(WineDataTemp$quality == 4, "Lev_Four", ifelse(WineDataTemp$quality == 5, "Lev_Five", ifelse(WineDataTemp$quality == 6, "Lev_Six", ifelse(WineDataTemp$quality == 7, "Lev_Seven", ifelse(WineDataTemp$quality == 8, "Lev_Eight", "Lev_Nine"))) )))
-
-# # Alcohol Content
-# Box_plot <- plot_ly(data = WineDataTemp, x = ~qualityLevels, y = ~alcohol, color = ~qualityLevels, type = "box", colors = "Dark2")
-# Box_plot
 
 
 # Data preparation - creating random training and test datasets
@@ -85,11 +165,8 @@ prop.table(table(WineData_train$quality))
 prop.table(table(WineData_test$quality))
 
 # Train model
-# Regression Trees
 
 # # C5.0
-# fit.c50 <- train(quality.level ~ alcohol + volatile.acidity + citric.acid + residual.sugar + chlorides + free.sulfur.dioxide + total.sulfur.dioxide + density + pH + sulphates + fixed.acidity, data=WineData_train, method="C5.0")
-# confusionMatrix(fit.c50)
 # # # Training a model on the data
 # # # The C5.0 package can be installed via the install.packages("C50") and 
 # # # loaded with the library(C50) command.
@@ -120,7 +197,7 @@ CrossTable(WineData_test$quality, WineData_predict, prop.chisq = FALSE, prop.c= 
 
 # Accuracy : Measures of performance
 library(caret)
-confusionMatrix(WineData_test$quality, WineData_predict,)
+confusionMatrix(WineData_test$quality, WineData_predict)
 
 # Improving model performance
 # Boosting the accuracy of decision trees
@@ -134,27 +211,4 @@ summary(WineData_boost10)
 
 WineData_boost10_predict <- predict(WineData_boost10, WineData_test)
 CrossTable(WineData_test$quality, WineData_boost10_predict, prop.chisq = FALSE, prop.c = FALSE, prop.r = FALSE, dnn = c('Actual Class', 'Predicted Class'))
-confusionMatrix(WineData_test$quality, WineData_boost10_predict, positive = "good")
-
-
-# # Making mistakes more costlier than others
-# Matrix_dimensions <- list(c("bad", "good"), c("bad", "good"))
-# names(Matrix_dimensions) <- c("Predicted", "Actual")
-
-# Matrix_dimensions
-
-# error_cost <- matrix(c(0,1,4,0), nrow = 2, dimnames = Matrix_dimensions)
-
-# error_cost
-
-# CreditData_cost <- C5.0(CreditData_train[-21], CreditData_train$class, costs = error_cost)
-# CreditData_cost_predict <- predict(CreditData_cost, CreditData_test)
-# CrossTable(CreditData_test$class, CreditData_cost_predict, prop.chisq=FALSE, prop.c = FALSE, prop.r=FALSE, dnn= c('Actual', 'Predicted'))
-
-## Training random forests
-library(randomForest)
-set.seed(300)
-rf <- randomForest(quality ~ ., data= WineData)
-rf
-
-# Evaluating random forest performance
+confusionMatrix(WineData_test$quality, WineData_boost10_predict)
