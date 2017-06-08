@@ -41,18 +41,11 @@ library(RWeka)
 # Read the csv file into a data frame titled WineData.
 WineData <- read.table("winequality-red.csv", sep=";", header=TRUE)
 
-#Data Visualization(Use RStudio or web-browser to view following plots)
-# Histogram for wine quality level
-histo <- plot_ly(data = WineData, x =~quality, type = "histogram")
-histo
 
-# Box plots
-WineDataTemp <- WineData
-WineDataTemp$qualityLevels <- ifelse(WineDataTemp$quality == 3, "Lev_Three", ifelse(WineDataTemp$quality == 4, "Lev_Four", ifelse(WineDataTemp$quality == 5, "Lev_Five", ifelse(WineDataTemp$quality == 6, "Lev_Six", ifelse(WineDataTemp$quality == 7, "Lev_Seven", ifelse(WineDataTemp$quality == 8, "Lev_Eight", "Lev_Nine"))) )))
 
-# Alcohol Content
-Box_plot <- plot_ly(data = WineDataTemp, x = ~qualityLevels, y = ~alcohol, color = ~qualityLevels, type = "box", colors = "Dark2")
-Box_plot
+WineData$quality <- ifelse(WineData$quality < 5, 'bad', ifelse(WineData$quality > 6,'good','normal'))
+WineData$quality <- as.factor(WineData$quality)
+str(WineData$quality)
 
 # Data preparation - creating random training and test datasets
 # Create random sample
@@ -62,7 +55,6 @@ set.seed(123)
 train_sample <- sample(nrow(WineData), 0.8 * nrow(WineData))
 WineData_train <- WineData[train_sample, ]
 WineData_test <- WineData[-train_sample, ]
-
 # Check whether data set fairly even split
 prop.table(table(WineData_train$quality))
 
@@ -70,4 +62,91 @@ prop.table(table(WineData_test$quality))
 
 
 # Train model - Regression Tree
-# Build the model S
+# Build the model with recursive partitioning trees
+WineData_model <- rpart(quality ~. , data = WineData_train)
+
+summary(WineData_model)
+
+# plot the cost complexity parameters
+plotcp(WineData_model)
+
+
+# Visualizing Decision Trees 
+fancyRpartPlot(WineData_model)
+
+
+# Visualize the classification tree
+plot(WineData_model, uniform=TRUE, branch=0.6, margin=0.1)
+text(WineData_model, all=TRUE, use.n = TRUE)
+
+# Model Evaluation using test data
+WineData_predict <- predict(WineData_model, WineData_test, type="class")
+
+# Use the table function to generate a classification table for testing dataset
+table(WineData_test$quality, WineData_predict)
+
+
+# Accuracy : Measures of performance
+library(caret)
+confusionMatrix(table(WineData_predict, WineData_test$quality))
+
+# Pruning a recursive partitioning tree
+# Find minimum cross-validation error of the classification tree model
+min(WineData_model$cptable[,"xerror"])
+# Locate the record with the minimum cross-validation errors
+which.min(WineData_model$cptable[,"xerror"])
+
+# Get the cost complexity parameter of the record with the minimum cross-validation errors
+WineData_model_CP = WineData_model$cptable[5, "CP"]
+WineData_model_CP
+
+# Prune the tree by setting the cp parameter to the CP value of the record with minimum cross-validation errors
+prune_tree = prune(WineData_model, cp=WineData_model_CP)
+
+# Visualize the classification tree by using the plot and text function
+plot(prune_tree, margin=0.1)
+text(prune_tree, all=TRUE, use.n=TRUE)
+
+# Generate a classification table based on the pruned classification tree model
+predictions = predict(prune_tree, WineData_test, type="class")
+table(WineData_test$quality, predictions)
+
+
+# Generate confusion matrix
+confusionMatrix(table(predictions, WineData_test$quality))
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+# # Model Improvement using M5P from RWeka 
+# # Build Model 
+# WineData_model_M5P <- M5P(quality ~. , data= WineData_train)
+
+# # Model Evaluation using test data
+# WineData_predict_M5P <- predict(WineData_model_M5P, WineData_test)
+
+# WineData_model_M5P
+
+# MAE(WineData_test$quality, WineData_predict_M5P)
+
+
+
+
+
