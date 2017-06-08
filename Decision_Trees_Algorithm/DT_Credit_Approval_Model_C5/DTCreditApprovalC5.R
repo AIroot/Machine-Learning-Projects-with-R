@@ -28,6 +28,58 @@ Credit_Data <- write.csv(CreditData, file = "CreditData.csv", row.names = FALSE)
 # Read the csv file into a data frame titled CreditData.
 CreditData <- read.csv("CreditData.csv", header=TRUE)
 
+
+
+# Data Visualization
+# plot histogram 
+
+library(ggplot2) 
+
+#Plotting the data
+ggplot(CreditData, aes(age)) + geom_histogram(binwidth=4, colour="black", fill="green") +
+  labs(x= "Age",y= "Frequency" , title = "Plot of Age")
+
+
+ggplot(CreditData, aes(job) ) + geom_bar(aes(fill = as.factor(CreditData$job))) + 
+  scale_fill_discrete(name="Job Type",
+                      labels=c( "Unskilled and Non-Resident","Unskilled and Resident", "Skilled", "Highly Skilled")) + 
+  theme(axis.text.x=element_blank(),
+        axis.ticks.x=element_blank()) +
+  labs(x= "Level of Job",y= "Frequency" , title = "Plot of Job")
+
+ggplot(CreditData, aes(housing) ) + geom_bar(aes(fill = as.factor(CreditData$housing))) + 
+  scale_fill_discrete(name="Housing",
+                      labels=c( "Free","Own", "Rent")) + 
+  theme(axis.text.x=element_blank(),
+        axis.ticks.x=element_blank()) +
+  labs(x= "Housing",y= "Frequency" , title = "Plot of Housing")
+
+
+ggplot(CreditData, aes(saving) ) + geom_bar(aes(fill = as.factor(CreditData$saving)))  + 
+  scale_fill_discrete(name="Saving Accounts",
+                      labels=c( "Little","Moderate", "Quite Rich", "Rich", "NA"))  +
+  labs(x= "Saving Accounts",y= "Frequency" , title = "Plot of Saving Accounts")
+
+
+ggplot(CreditData, aes(chk_status) ) + geom_bar(aes(fill = as.factor(CreditData$chk_status))) + 
+  scale_fill_discrete(name="Checking Account",
+                      labels=c( "Little","Moderate", "Rich")) + 
+  theme(axis.text.x=element_blank(),
+        axis.ticks.x=element_blank()) +
+  labs(x= "Checking Account",y= "Frequency" , title = "Plot of Checking Account")
+
+hist(CreditData$credit_amount, main = "Histogram of Credit Amount", xlab = "Credit Amount", ylab = "Frequency", col = "green", border = "black" )
+
+ggplot(CreditData, aes(mth_duration)) + geom_histogram(binwidth=4, colour="black", fill="green") +
+  labs(x= "Duration in Months",y= "Frequency" , title = "Plot of Duration")
+
+ggplot(CreditData, aes(purpose) ) + geom_bar(aes(fill = as.factor(CreditData$purpose))) + 
+  scale_fill_discrete(name="Purpose of Loan",
+                      labels=c( "Business","Car", "Domestic Appliances","Education","Furniture/Equipment","Radio/TV","Repairs","Vacation/Others")) + 
+  theme(axis.text.x=element_blank(),
+        axis.ticks.x=element_blank()) +
+  labs(x= "Purpose of Loan",y= "Frequency" , title = "Plot of Loan Purpose")
+
 # Class columns convert into facator
 CreditData$class <- ifelse(CreditData$class==1, "good","bad")
 CreditData$class = as.factor(CreditData$class)
@@ -159,10 +211,10 @@ summary(CreditData$mth_duration)
 
 # Data preparation - creating random training and test datasets
 # Create random sample
-# Divide the data into a training set and a test set randomly with ratio 90:10
+# Divide the data into a training set and a test set randomly with ratio 90:1
 
 set.seed(123)
-train_sample <- sample(1000, 900)
+train_sample <- sample(nrow(CreditData), 0.9 * nrow(CreditData))
 CreditData_train <- CreditData[train_sample, ]
 CreditData_test <- CreditData[-train_sample, ]
 
@@ -230,3 +282,4 @@ error_cost
 CreditData_cost <- C5.0(CreditData_train[-21], CreditData_train$class, costs = error_cost)
 CreditData_cost_predict <- predict(CreditData_cost, CreditData_test)
 CrossTable(CreditData_test$class, CreditData_cost_predict, prop.chisq=FALSE, prop.c = FALSE, prop.r=FALSE, dnn= c('Actual', 'Predicted'))
+
