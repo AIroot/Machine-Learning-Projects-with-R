@@ -28,19 +28,19 @@ ConcreteData_n <- as.data.frame(lapply(ConcreteData, normalize))
 summary(ConcreteData_n$Compressive_Strength)
 summary(ConcreteData$Compressive_Strength)
 
-# Data preparation - creating random training and test datasets
-# Create random sample
-# Divide the data into a training set and a test set randomly with ratio 75:25
+# # Data preparation - creating random training and test datasets
+# # Create random sample
+# # Divide the data into a training set and a test set randomly with ratio 75:25
 
-set.seed(123)
-train_sample <- sample(nrow(ConcreteData_n), 0.75 * nrow(ConcreteData_n))
-ConcreteData_train <- ConcreteData_n[train_sample, ]
-ConcreteData_test <- ConcreteData_n[-train_sample, ]
+# set.seed(123)
+# train_sample <- sample(nrow(ConcreteData_n), 0.75 * nrow(ConcreteData_n))
+# ConcreteData_train <- ConcreteData_n[train_sample, ]
+# ConcreteData_test <- ConcreteData_n[-train_sample, ]
 
-# Train model
+# # Train model
 
-# # NeuralNet 
-# # # Training a model on the data
+# # # NeuralNet 
+# # # # Training a model on the data
 # # # The neuralnet package can be installed via the install.packages("neuralnet") and 
 # # # loaded with the library(neuralnet) command.
 library(neuralnet)
