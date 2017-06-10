@@ -44,3 +44,6 @@ ConcreteData_test <- ConcreteData_n[-train_sample, ]
 # # The neuralnet package can be installed via the install.packages("neuralnet") and 
 # # loaded with the library(neuralnet) command.
 library(neuralnet)
+# The model is used to train simplest multilayer feedforward network with only a single hidden node
+Concrete_Data_model <- neuralnet(Compressive_Strength ~ Cement_comp + BF_Slag + Fly_Ash + Water + Superplasticizer + Coarse_Aggregate + Fine_Aggregate + Age_Day, data = ConcreteData_train)
+plot(Concrete_Data_model)
