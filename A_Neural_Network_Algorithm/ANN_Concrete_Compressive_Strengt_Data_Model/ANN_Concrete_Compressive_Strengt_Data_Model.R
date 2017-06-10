@@ -47,3 +47,11 @@ library(neuralnet)
 # The model is used to train simplest multilayer feedforward network with only a single hidden node
 Concrete_Data_model <- neuralnet(Compressive_Strength ~ Cement_comp + BF_Slag + Fly_Ash + Water + Superplasticizer + Coarse_Aggregate + Fine_Aggregate + Age_Day, data = ConcreteData_train)
 plot(Concrete_Data_model)
+
+# Evaluating model performance
+model_results <- compute(Concrete_Data_model, ConcreteData_test[1:8])
+
+Predicted_strength <- model_results$net.result
+
+# cor() function is used to obtain a correlation between two numeric vectors
+cor(Predicted_strength, ConcreteData_test$Compressive_Strength)
