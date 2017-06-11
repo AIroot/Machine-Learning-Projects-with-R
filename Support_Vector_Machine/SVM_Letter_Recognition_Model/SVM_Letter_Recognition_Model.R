@@ -42,3 +42,12 @@ LetterData_model <- ksvm(lettr ~ ., data = LetterData_train, kernel = "vanillado
 # See the basic parameters and the fit of the model
 LetterData_model
 
+# Evaluating model performance
+LetterData_Predictions <- predict(LetterData_model, LetterData_test)
+
+head(LetterData_Predictions)
+
+# # Examine how well our classifier performed
+# table(LetterData_Predictions, LetterData_test$lettr)
+
+
