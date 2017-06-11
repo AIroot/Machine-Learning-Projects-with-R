@@ -58,4 +58,10 @@ table(predictionStatus)
 # Accuracy
 prop.table(table(predictionStatus))
 
+# Improving model performance
+# Use the Gaussian RBF kernel
+LetterData_model_RBF <- ksvm(lettr ~., data = LetterData_train, kernel = "rbfdot")
+
+# Make predictions
+LetterData_Predictions_RBF <- predict(LetterData_model_RBF, LetterData_test)
 
