@@ -55,3 +55,15 @@ Predicted_strength <- model_results$net.result
 
 # cor() function is used to obtain a correlation between two numeric vectors
 cor(Predicted_strength, ConcreteData_test$Compressive_Strength)
+
+# Improving model performance
+Concrete_Data_model2 <- neuralnet(Compressive_Strength ~ Cement_comp + BF_Slag + Fly_Ash + Water + Superplasticizer + Coarse_Aggregate + Fine_Aggregate + Age_Day, data = ConcreteData_train, hidden = 5)
+plot(Concrete_Data_model2)
+
+# Evaluating model performance
+model_results2 <- compute(Concrete_Data_model2, ConcreteData_test[1:8])
+
+Predicted_strength2 <- model_results2$net.result
+
+# cor() function is used to obtain a correlation between two numeric vectors
+cor(Predicted_strength2, ConcreteData_test$Compressive_Strength)
