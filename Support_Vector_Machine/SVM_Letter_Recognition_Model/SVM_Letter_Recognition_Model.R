@@ -50,4 +50,12 @@ head(LetterData_Predictions)
 # Examine how well our classifier performed
 table(LetterData_Predictions, LetterData_test$lettr)
 
+# Considers only whether the prediction was correct or incorrect
+predictionStatus <- LetterData_Predictions == LetterData_test$lettr
+
+table(predictionStatus)
+
+# Accuracy
+prop.table(table(predictionStatus))
+
 
