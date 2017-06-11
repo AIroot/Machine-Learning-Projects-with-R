@@ -47,7 +47,7 @@ LetterData_Predictions <- predict(LetterData_model, LetterData_test)
 
 head(LetterData_Predictions)
 
-# # Examine how well our classifier performed
-# table(LetterData_Predictions, LetterData_test$lettr)
+# Examine how well our classifier performed
+table(LetterData_Predictions, LetterData_test$lettr)
 
 
