@@ -34,3 +34,11 @@ set.seed(123)
 train_sample <- sample(nrow(LetterData), 0.8 * nrow(LetterData))
 LetterData_train <- LetterData[train_sample, ]
 LetterData_test <- LetterData[-train_sample, ]
+
+# Training the model 
+library(kernlab)
+LetterData_model <- ksvm(lettr ~ ., data = LetterData_train, kernel = "vanilladot")
+
+# See the basic parameters and the fit of the model
+LetterData_model
+
