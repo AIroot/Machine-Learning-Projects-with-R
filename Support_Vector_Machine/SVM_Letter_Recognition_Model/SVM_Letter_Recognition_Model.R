@@ -25,3 +25,12 @@
 LetterData <- read.csv("LetterData.csv", header= TRUE)
 
 str(LetterData)
+
+# Data preparation - creating random training and test datasets
+# Create random sample
+# Divide the data into a training set and a test set randomly with ratio 75:25
+
+set.seed(123)
+train_sample <- sample(nrow(LetterData), 0.8 * nrow(LetterData))
+LetterData_train <- LetterData[train_sample, ]
+LetterData_test <- LetterData[-train_sample, ]
