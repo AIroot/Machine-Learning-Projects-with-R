@@ -65,3 +65,11 @@ LetterData_model_RBF <- ksvm(lettr ~., data = LetterData_train, kernel = "rbfdot
 # Make predictions
 LetterData_Predictions_RBF <- predict(LetterData_model_RBF, LetterData_test)
 
+# Compare the accuracy 
+Prdeict_accuracy_RBF <- LetterData_Predictions_RBF == LetterData_test$lettr
+
+table(Prdeict_accuracy_RBF)
+# Probability of correct prdiction and incorrect prdiction
+prop.table(table(Prdeict_accuracy_RBF))
+
+
