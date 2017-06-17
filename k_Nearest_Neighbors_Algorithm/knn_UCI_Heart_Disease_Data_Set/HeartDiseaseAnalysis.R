@@ -32,16 +32,16 @@ hd_Data <- read.csv("hd_data.csv", header=TRUE)
 # Displays description of each variable
 str(hd_Data)
 
-# list rows of data that have missing values 
+# # list rows of data that have missing values 
 hd_Data[hd_Data=='?'] <- NA
 hd_Data[!complete.cases(hd_Data),]
 
-# Identify missing values using graphical view. See the Rplot.pdf and red colour stripes indicate the missing values.  
-library(Amelia)
-missmap(hd_Data, main="Missing Data - Heart Disease", col=c("red","grey"), legend=FALSE)
+# # # Identify missing values using graphical view. See the Rplot.pdf and red colour stripes indicate the missing values.  
+# # library(Amelia)
+# # missmap(hd_Data, main="Missing Data - Heart Disease", col=c("red","grey"), legend=FALSE)
 
 
-# create new dataset without missing data 
+# # create new dataset without missing data 
 
 new_hd_Data <- na.omit(hd_Data)
 
@@ -70,7 +70,7 @@ barplot(table(new_hd_Data$thal),col="red",main="3 = normal; 6 = fixed defect; 7 
 
 
 
-## Correlation Matrix among input continuous variables
+# ## Correlation Matrix among input continuous variables
 new_hd_Data_cor<-data.frame(new_hd_Data$age,new_hd_Data$trestbps,new_hd_Data$chol,new_hd_Data$thalach,new_hd_Data$oldpeak)
 str(new_hd_Data_cor)
 cor(new_hd_Data_cor)
@@ -81,8 +81,8 @@ cor(new_hd_Data_cor)
 
 
 
-## Prior running the KNN model, the dataset has to be transformed to Numeric shown below
-## Convert factors having character levels to numeric levels
+# ## Prior running the KNN model, the dataset has to be transformed to Numeric shown below
+# ## Convert factors having character levels to numeric levels
 
 hd_Data_transform<-new_hd_Data
 hd_Data_transform$ca=factor(hd_Data_transform$ca,levels=c("?","0.0","1.0","2.0","3.0"),labels=c(1,2,3,4,5))
