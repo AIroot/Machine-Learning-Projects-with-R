@@ -16,7 +16,15 @@ table(SNSData$gender, useNA = "ifany")
 # library(Amelia)
 # missmap(SNSData, main="Missing Data - SNS", col=c("red","grey"), legend=FALSE)
 
+# Data preparation- dummy coding 
+SNSData$female <- ifelse(SNSData$gender == "F" &  !is.na(SNSData$gender), 1, 0)
+SNSData$no_gender <- ifelse(is.na(SNSData$gender), 1, 0)
 
+table(SNSData$gender, useNA = "ifany")
+
+table(SNSData$female, useNA = "ifany")
+
+table(SNSData$no_gender, useNA = "ifany")
 
 # Data preparation - imputing 
 # Use age range: If the age is at least 13 and less than 20 years
