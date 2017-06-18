@@ -44,5 +44,21 @@ length(ave_age)
 SNSData$age <- ifelse(is.na(SNSData$age), ave_age, SNSData$age)
 summary(SNSData$age)
 
+# Train the model
+# Use R default stats package
+library(stats)
+
+# The kmeans() function requires a data frame containing only numeric data
+# and a parameter specifying the desired number of clusters.
+
+# Considering only the 36 features that represent the number of times various
+# interest appeard on the SNSData
+
+interests <- SNSData[5:40]
+
+
+
+
+
 
 
