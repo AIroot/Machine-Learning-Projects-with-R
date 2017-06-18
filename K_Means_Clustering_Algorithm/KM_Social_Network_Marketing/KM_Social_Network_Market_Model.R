@@ -61,12 +61,21 @@ interests <- SNSData[5:40]
 interests_z <- as.data.frame(lapply(interests, scale))
 
 # Apply kmeans() functions
-set.seed(12345)
+set.seed(2345)
 
 SNSData_Clusters <- kmeans(interests_z, 5)
 
 
+# Evaluating model performance
+SNSData_Clusters$size 
 
+# Check the coordinates of the cluster centroids 
+SNSData_Clusters$centers
 
+# # Plot the data
+# library(ggplot2)
+# plot(SNSData_Clusters)
 
+# # improving model performance
 
+NbClust(SNSData_Clusters)
