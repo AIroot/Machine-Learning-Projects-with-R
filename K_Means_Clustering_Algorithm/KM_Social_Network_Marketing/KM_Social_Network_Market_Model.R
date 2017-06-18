@@ -84,4 +84,6 @@ SNSData[1:5, c("cluster", "gender", "age", "friends")]
 aggregate(data = SNSData, age ~ cluster, mean)
 
 # use aggregate() to check cluster and feamales
-aggregate(data = SNSData, female ~ cluster, mean) 
+aggregate(data = SNSData, female ~ cluster, mean)
+
+ 
