@@ -56,6 +56,14 @@ library(stats)
 
 interests <- SNSData[5:40]
 
+# Avoid features dominate 
+# Use normalize or z-score standardize
+interests_z <- as.data.frame(lapply(interests, scale))
+
+# Apply kmeans() functions
+set.seed(12345)
+
+SNSData_Clusters <- kmeans(interests_z, 5)
 
 
 
