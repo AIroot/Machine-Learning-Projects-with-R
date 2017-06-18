@@ -67,15 +67,21 @@ SNSData_Clusters <- kmeans(interests_z, 5)
 
 
 # Evaluating model performance
+# The basic ways to evaluate the cluster is size of cluster. 
 SNSData_Clusters$size 
 
 # Check the coordinates of the cluster centroids 
 SNSData_Clusters$centers
 
-# # Plot the data
-# library(ggplot2)
-# plot(SNSData_Clusters)
+# Improving model
+# Add clusters to the data frame
+SNSData$cluster <- SNSData_Clusters$cluster
 
-# # improving model performance
+# Check how the cluster relates to induvidual characteristics
+SNSData[1:5, c("cluster", "gender", "age", "friends")] 
 
-NbClust(SNSData_Clusters)
+# Use aggregate() functions
+aggregate(data = SNSData, age ~ cluster, mean)
+
+# use aggregate() to check cluster and feamales
+aggregate(data = SNSData, female ~ cluster, mean) 
