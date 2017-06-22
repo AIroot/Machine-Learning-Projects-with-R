@@ -271,3 +271,31 @@ cut.cluster_WD_h5 = cutree(WholesaleData_HC_WD, h = 5)
 table(cut.cluster_WD_h5)
 identical(cut.cluster_WD, cut.cluster_WD_h5)
 
+# Use complete Method 
+Nb_Clust_CO = NbClust(WholesaleData_n, method="complete")
+# Explore more details on Ward’s Method
+t(Nb_Clust_CO$Best.nc)
+
+table(Nb_Clust_CO$Best.partition)
+
+# Use ward.D2 method in hclust()
+WholesaleData_HC_CO <- hclust(WholesaleData_Dist_n, "complete")
+# Visualization of hclust
+plot(WholesaleData_HC_CO, labels = FALSE, hang = -1)
+# Add rectangle around 3 groups
+rect.hclust(WholesaleData_HC_CO, k = 3, border = 2:4) 
+cut.cluster_CO = cutree(WholesaleData_HC_CO, k = 3)
+table(cut.cluster_CO)
+
+# cutting hight = 20 
+cut.cluster_CO_h20 = cutree(WholesaleData_HC_CO, h = 20)
+table(cut.cluster_CO_h20)
+identical(cut.cluster_CO, cut.cluster_CO_h20)
+# cutting hight = 10 
+cut.cluster_CO_h10 = cutree(WholesaleData_HC_CO, h = 10)
+table(cut.cluster_CO_h10)
+identical(cut.cluster_CO, cut.cluster_CO_h10)
+# cutting hight = 8 
+cut.cluster_CO_h8 = cutree(WholesaleData_HC_CO, h = 8)
+table(cut.cluster_CO_h8)
+identical(cut.cluster_CO, cut.cluster_CO_h8)
