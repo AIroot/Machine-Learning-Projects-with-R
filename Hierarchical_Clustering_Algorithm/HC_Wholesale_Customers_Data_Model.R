@@ -175,3 +175,58 @@ rect.hclust(WholesaleData_HC_centroid, k = 4, border = 2:4)
 cut.cluster_centroid = cutree(WholesaleData_HC_centroid, k = 4)
 table(cut.cluster_centroid)
 
+# Use ward.D2 method in hclust()
+WholesaleData_HC_WD <- hclust(WholesaleData_Dist_n, "ward.D2")
+# Visualization of hclust
+plot(WholesaleData_HC_WD, labels = FALSE, hang = -1)
+# Add rectangle around 3 groups
+rect.hclust(WholesaleData_HC_WD, k = 5, border = 2:4) 
+cut.cluster_WD = cutree(WholesaleData_HC_WD, k = 5)
+table(cut.cluster_WD)
+
+# cutting hight = 18 
+cut.cluster_WD_h18 = cutree(WholesaleData_HC_WD, h = 18)
+table(cut.cluster_WD_h18)
+identical(cut.cluster_WD, cut.cluster_WD_h18)
+# cutting hight = 10 
+cut.cluster_WD_h10 = cutree(WholesaleData_HC_WD, h = 10)
+table(cut.cluster_WD_h10)
+identical(cut.cluster_WD, cut.cluster_WD_h10)
+# cutting hight = 5 
+cut.cluster_WD_h5 = cutree(WholesaleData_HC_WD, h = 5)
+table(cut.cluster_WD_h5)
+identical(cut.cluster_WD, cut.cluster_WD_h5)
+
+# Compare dendrograms using complete dissimilarity measure method
+WholesaleData_HC_n <- hclust(WholesaleData_Dist_n,method="complete")
+# Visualization of hclust
+plot(WholesaleData_HC_n, labels = FALSE, hang = -1)
+# Add rectangle around 3 groups
+rect.hclust(WholesaleData_HC_n, k = 5, border = 2:4) 
+cut.cluster_CO = cutree(WholesaleData_HC_n, k = 5)
+table(cut.cluster_CO)
+
+WholesaleData_HC_single <- hclust(WholesaleData_Dist_n,method="single")
+# Visualization of hclust
+plot(WholesaleData_HC_single, labels = FALSE, hang = -1)
+# Add rectangle around 3 groups
+rect.hclust(WholesaleData_HC_single, k = 5, border = 2:4) 
+cut.cluster_single = cutree(WholesaleData_HC_single, k = 5)
+table(cut.cluster_single)
+
+WholesaleData_HC_average <- hclust(WholesaleData_Dist_n,method="average")
+# Visualization of hclust
+plot(WholesaleData_HC_average, labels = FALSE, hang = -1)
+# Add rectangle around 3 groups
+rect.hclust(WholesaleData_HC_average, k = 5, border = 2:4) 
+cut.cluster_average = cutree(WholesaleData_HC_average, k = 5)
+table(cut.cluster_average)
+
+WholesaleData_HC_centroid <- hclust(WholesaleData_Dist_n,method="centroid")
+# Visualization of hclust
+plot(WholesaleData_HC_centroid, labels = FALSE, hang = -1)
+# Add rectangle around 3 groups
+rect.hclust(WholesaleData_HC_centroid, k = 5, border = 2:4)
+cut.cluster_centroid = cutree(WholesaleData_HC_centroid, k = 5)
+table(cut.cluster_centroid)
+
