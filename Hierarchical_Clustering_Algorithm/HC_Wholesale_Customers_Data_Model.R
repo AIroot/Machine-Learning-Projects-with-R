@@ -151,3 +151,10 @@ rect.hclust(WholesaleData_HC_n, k = 4, border = 2:4)
 cut.cluster_CO = cutree(WholesaleData_HC_n, k = 4)
 table(cut.cluster_CO)
 
+WholesaleData_HC_single <- hclust(WholesaleData_Dist_n,method="single")
+# Visualization of hclust
+plot(WholesaleData_HC_single, labels = FALSE, hang = -1)
+# Add rectangle around 3 groups
+rect.hclust(WholesaleData_HC_single, k = 4, border = 2:4) 
+cut.cluster_single = cutree(WholesaleData_HC_single, k = 4)
+table(cut.cluster_single)
