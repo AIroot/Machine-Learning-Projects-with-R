@@ -109,3 +109,22 @@ WholesaleData_n <- as.data.frame(lapply(Remove_Top_Five[3:8], scale))
 summary(WholesaleData_n)
 
 
+# Hierarchical Clustering on Different Feature
+# require(fastcluster)
+# require(graphics)
+library(gplots)
+library(cluster)
+library(NbClust)
+
+# Compute pairewise distance matrices
+WholesaleData_Dist_n <- dist(WholesaleData_n,method = "euclidean")
+
+
+# Use ward.D2 method in hclust()
+WholesaleData_HC_WD <- hclust(WholesaleData_Dist_n, "ward.D2")
+# Visualization of hclust
+plot(WholesaleData_HC_WD, labels = FALSE, hang = -1)
+# Add rectangle around 3 groups
+rect.hclust(WholesaleData_HC_WD, k = 4, border = 2:4) 
+cut.cluster_WD = cutree(WholesaleData_HC_WD, k = 4)
+table(cut.cluster_WD)
