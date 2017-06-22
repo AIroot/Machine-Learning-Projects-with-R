@@ -128,3 +128,17 @@ plot(WholesaleData_HC_WD, labels = FALSE, hang = -1)
 rect.hclust(WholesaleData_HC_WD, k = 4, border = 2:4) 
 cut.cluster_WD = cutree(WholesaleData_HC_WD, k = 4)
 table(cut.cluster_WD)
+
+# cutting hight = 20 
+cut.cluster_WD_h20 = cutree(WholesaleData_HC_WD, h = 20.5)
+table(cut.cluster_WD_h20)
+identical(cut.cluster_WD, cut.cluster_WD_h20)
+# cutting hight = 10 
+cut.cluster_WD_h10 = cutree(WholesaleData_HC_WD, h = 10)
+table(cut.cluster_WD_h10)
+identical(cut.cluster_WD, cut.cluster_WD_h10)
+# cutting hight = 5 
+cut.cluster_WD_h5 = cutree(WholesaleData_HC_WD, h = 5)
+table(cut.cluster_WD_h5)
+identical(cut.cluster_WD, cut.cluster_WD_h5)
+
