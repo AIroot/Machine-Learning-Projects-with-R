@@ -142,3 +142,12 @@ cut.cluster_WD_h5 = cutree(WholesaleData_HC_WD, h = 5)
 table(cut.cluster_WD_h5)
 identical(cut.cluster_WD, cut.cluster_WD_h5)
 
+# Compare dendrograms using complete dissimilarity measure method
+WholesaleData_HC_n <- hclust(WholesaleData_Dist_n,method="complete")
+# Visualization of hclust
+plot(WholesaleData_HC_n, labels = FALSE, hang = -1)
+# Add rectangle around 3 groups
+rect.hclust(WholesaleData_HC_n, k = 4, border = 2:4) 
+cut.cluster_CO = cutree(WholesaleData_HC_n, k = 4)
+table(cut.cluster_CO)
+
