@@ -158,3 +158,11 @@ plot(WholesaleData_HC_single, labels = FALSE, hang = -1)
 rect.hclust(WholesaleData_HC_single, k = 4, border = 2:4) 
 cut.cluster_single = cutree(WholesaleData_HC_single, k = 4)
 table(cut.cluster_single)
+
+WholesaleData_HC_average <- hclust(WholesaleData_Dist_n,method="average")
+# Visualization of hclust
+plot(WholesaleData_HC_average, labels = FALSE, hang = -1)
+# Add rectangle around 3 groups
+rect.hclust(WholesaleData_HC_average, k = 4, border = 2:4) 
+cut.cluster_average = cutree(WholesaleData_HC_average, k = 4)
+table(cut.cluster_average)
