@@ -230,3 +230,30 @@ rect.hclust(WholesaleData_HC_centroid, k = 5, border = 2:4)
 cut.cluster_centroid = cutree(WholesaleData_HC_centroid, k = 5)
 table(cut.cluster_centroid)
 
+# Nuber of clusters
+# The package NbClust simplify the search of an interesting number of clusters
+# Use Ward’s Method 
+Nb_Clust_WD = NbClust(WholesaleData_n, method="ward.D2")
+# Explore more details on Ward’s Method
+t(Nb_Clust_WD$Best.nc)
+
+
+for (i in 1:ncol(Nb_Clust_WD$All.index)) {
+    plot(rownames(Nb_Clust_WD$All.index), Nb_Clust_WD$All.index[,i], type = "l",
+         main = colnames(Nb_Clust_WD$All.index)[i], axes = FALSE)
+    axis(1, at = rownames(Nb_Clust_WD$All.index), labels = rownames(Nb_Clust_WD$All.index), 
+         lwd = 0, padj = -2)
+    best = Nb_Clust_WD$Best.nc[1,i]
+    if (best != 0)
+        points(best[1], Nb_Clust_WD$All.index[as.character(best),i], col = "red")
+}
+
+table(Nb_Clust_WD$Best.partition)
+# Use ward.D2 method in hclust()
+WholesaleData_HC_WD <- hclust(WholesaleData_Dist_n, "ward.D2")
+# Visualization of hclust
+plot(WholesaleData_HC_WD, labels = FALSE, hang = -1)
+# Add rectangle around 3 groups
+rect.hclust(WholesaleData_HC_WD, k = 2, border = 2:4) 
+cut.cluster_WD = cutree(WholesaleData_HC_WD, k = 2)
+table(cut.cluster_WD)
