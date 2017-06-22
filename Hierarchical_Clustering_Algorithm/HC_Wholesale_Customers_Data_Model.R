@@ -89,3 +89,23 @@ boxplot(Remove_Top_Five$Delicassen~Remove_Top_Five$Channel, main="Delicassen",yl
 
 
 
+# # Data Visualization
+
+for (i in c(3:8))
+    hist(WholesaleData[,c(i)], breaks = 200, main = colnames(WholesaleData)[i], xlab="Annual Spending (m.u.)", ylab = "No. of Customers")
+
+
+for (i in c(3:8))
+    hist(Remove_Top_Five[,c(i)], breaks = 200, main = colnames(WholesaleData)[i], xlab="Annual Spending (m.u.)", ylab = "No. of Customers")
+
+
+
+summary(Remove_Top_Five)
+
+# Use normalize or z-score standardize
+ 
+WholesaleData_n <- as.data.frame(lapply(Remove_Top_Five[3:8], scale))
+
+summary(WholesaleData_n)
+
+
