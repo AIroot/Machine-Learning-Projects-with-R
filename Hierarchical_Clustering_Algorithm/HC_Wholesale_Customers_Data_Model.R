@@ -166,3 +166,12 @@ plot(WholesaleData_HC_average, labels = FALSE, hang = -1)
 rect.hclust(WholesaleData_HC_average, k = 4, border = 2:4) 
 cut.cluster_average = cutree(WholesaleData_HC_average, k = 4)
 table(cut.cluster_average)
+
+WholesaleData_HC_centroid <- hclust(WholesaleData_Dist_n,method="centroid")
+# Visualization of hclust
+plot(WholesaleData_HC_centroid, labels = FALSE, hang = -1)
+# Add rectangle around 3 groups
+rect.hclust(WholesaleData_HC_centroid, k = 4, border = 2:4)
+cut.cluster_centroid = cutree(WholesaleData_HC_centroid, k = 4)
+table(cut.cluster_centroid)
+
