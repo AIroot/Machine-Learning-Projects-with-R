@@ -33,3 +33,31 @@ boxplot(WholesaleData$Frozen~WholesaleData$Channel, main="Frozen",ylab="Frozen",
 boxplot(WholesaleData$Detergents_Paper~WholesaleData$Channel, main="Detergents_Paper",ylab="Detergents_Paper",xlab="Channel")
 boxplot(WholesaleData$Delicassen~WholesaleData$Channel, main="Delicassen",ylab="Delicassen",xlab="Channel")
 
+# z-score standardize
+WholesaleData_z <- as.data.frame(lapply(WholesaleData, scale))
+
+# Check the z-score effect for outliers
+boxplot(WholesaleData_z$Fresh~WholesaleData_z$Channel, main=" Fresh",ylab="Fresh",xlab="Channel")
+boxplot(WholesaleData_z$Milk~WholesaleData_z$Channel, main=" Milk",ylab="Milk",xlab="Channel")
+boxplot(WholesaleData_z$Grocery~WholesaleData_z$Channel, main=" Grocery",ylab="Grocery",xlab="Channel")
+boxplot(WholesaleData_z$Frozen~WholesaleData_z$Channel, main="Frozen",ylab="Frozen",xlab="Channel")
+boxplot(WholesaleData_z$Detergents_Paper~WholesaleData_z$Channel, main="Detergents_Paper",ylab="Detergents_Paper",xlab="Channel")
+boxplot(WholesaleData_z$Delicassen~WholesaleData_z$Channel, main="Delicassen",ylab="Delicassen",xlab="Channel")
+
+
+# Transformation - normalizing numeric data
+
+normalize <- function(x) {
+	return ((x - min(x)) / (max(x) - min(x)))
+}
+
+# Apply normalize function to each list elememt. 
+WholesaleData_n <- as.data.frame(lapply(WholesaleData, normalize))
+# Check the normalize effect for outliers
+boxplot(WholesaleData_n$Fresh~WholesaleData_n$Channel, main=" Fresh",ylab="Fresh",xlab="Channel")
+boxplot(WholesaleData_n$Milk~WholesaleData_n$Channel, main=" Milk",ylab="Milk",xlab="Channel")
+boxplot(WholesaleData_n$Grocery~WholesaleData_n$Channel, main=" Grocery",ylab="Grocery",xlab="Channel")
+boxplot(WholesaleData_n$Frozen~WholesaleData_n$Channel, main="Frozen",ylab="Frozen",xlab="Channel")
+boxplot(WholesaleData_n$Detergents_Paper~WholesaleData_n$Channel, main="Detergents_Paper",ylab="Detergents_Paper",xlab="Channel")
+boxplot(WholesaleData_n$Delicassen~WholesaleData_n$Channel, main="Delicassen",ylab="Delicassen",xlab="Channel")
+
