@@ -59,7 +59,7 @@ interests <- SNSData[5:40]
 # Avoid features dominate 
 # Use normalize or z-score standardize
 interests_z <- as.data.frame(lapply(interests, scale))
-
+summary(interests_z)
 # Apply kmeans() functions
 set.seed(2345)
 
