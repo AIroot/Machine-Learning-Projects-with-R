@@ -134,3 +134,10 @@ library(fpc)
 plotcluster(WholesaleData_n, WholesaleData_Clusters_N$cluster)
 
 
+# Evaluating model performance
+# The basic ways to evaluate the cluster is size of cluster. 
+WholesaleData_Clusters_N$size 
+
+# Check the coordinates of the cluster centroids 
+WholesaleData_Clusters_N$centers
+
