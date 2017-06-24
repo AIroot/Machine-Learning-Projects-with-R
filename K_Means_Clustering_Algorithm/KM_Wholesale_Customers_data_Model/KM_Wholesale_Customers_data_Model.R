@@ -61,3 +61,20 @@ boxplot(WholesaleData_n$Frozen~WholesaleData_n$Channel, main="Frozen",ylab="Froz
 boxplot(WholesaleData_n$Detergents_Paper~WholesaleData_n$Channel, main="Detergents_Paper",ylab="Detergents_Paper",xlab="Channel")
 boxplot(WholesaleData_n$Delicassen~WholesaleData_n$Channel, main="Delicassen",ylab="Delicassen",xlab="Channel")
 
+# Normalizing / scaling the data won’t necessarily remove those outliers.
+# removing the top 5 customers from each category
+Remove_Outliers <- function (data,cols,n=5) { #Requires some data frame and the top N to remove
+idx.to.remove <-integer(0) #Initialize a vector to hold customers being removed
+for (c in cols){ # For every column in the data we passed to this function
+col.order <-order(data[,c],decreasing=T) #Sort column "c" in descending order (bigger on top)
+#Order returns the sorted index (e.g. row 15, 3, 7, 1, ...) rather than the actual values sorted.
+idx <-head(col.order, n) #Take the first n of the sorted column C to
+idx.to.remove <-union(idx.to.remove,idx) #Combine and de-duplicate the row ids that need to be removed
+}
+return(idx.to.remove) #Return the indexes of customers to be removed
+}
+
+Top_five <-Remove_Outliers(WholesaleData,cols=3:8,n=5)
+length(Top_five) #How Many Customers to be Removed?
+WholesaleData[Top_five,] #Examine the customers
+Remove_Top_Five<-WholesaleData[-c(Top_five),] #Remove the Customers
