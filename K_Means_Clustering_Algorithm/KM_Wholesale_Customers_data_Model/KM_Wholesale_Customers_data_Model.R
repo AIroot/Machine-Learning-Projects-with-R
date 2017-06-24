@@ -125,3 +125,12 @@ set.seed(2345)
 WholesaleData_Clusters_N <- kmeans(WholesaleData_n, 4)
 
 
+# Visualize k-means clusters
+clusplot(WholesaleData_n, WholesaleData_Clusters_N$cluster, color=TRUE, shade=TRUE,labels=2, lines=0)
+points(WholesaleData_Clusters_N$centers, pch=3, cex=2) 
+
+# Centroid plot 
+library(fpc)
+plotcluster(WholesaleData_n, WholesaleData_Clusters_N$cluster)
+
+
