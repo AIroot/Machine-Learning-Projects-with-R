@@ -78,3 +78,27 @@ Top_five <-Remove_Outliers(WholesaleData,cols=3:8,n=5)
 length(Top_five) #How Many Customers to be Removed?
 WholesaleData[Top_five,] #Examine the customers
 Remove_Top_Five<-WholesaleData[-c(Top_five),] #Remove the Customers
+
+# Visualize data set without outliers
+boxplot(Remove_Top_Five$Fresh~Remove_Top_Five$Channel, main=" Fresh",ylab="Fresh",xlab="Channel")
+boxplot(Remove_Top_Five$Milk~Remove_Top_Five$Channel, main=" Milk",ylab="Milk",xlab="Channel")
+boxplot(Remove_Top_Five$Grocery~Remove_Top_Five$Channel, main=" Grocery",ylab="Grocery",xlab="Channel")
+boxplot(Remove_Top_Five$Frozen~Remove_Top_Five$Channel, main="Frozen",ylab="Frozen",xlab="Channel")
+boxplot(Remove_Top_Five$Detergents_Paper~Remove_Top_Five$Channel, main="Detergents_Paper",ylab="Detergents_Paper",xlab="Channel")
+boxplot(Remove_Top_Five$Delicassen~Remove_Top_Five$Channel, main="Delicassen",ylab="Delicassen",xlab="Channel")
+
+
+
+
+# # Data Visualization
+
+for (i in c(3:8))
+    hist(WholesaleData[,c(i)], breaks = 200, main = colnames(WholesaleData)[i], xlab="Annual Spending (m.u.)", ylab = "No. of Customers")
+
+
+for (i in c(3:8))
+    hist(Remove_Top_Five[,c(i)], breaks = 200, main = colnames(WholesaleData)[i], xlab="Annual Spending (m.u.)", ylab = "No. of Customers")
+
+
+
+summary(Remove_Top_Five)
