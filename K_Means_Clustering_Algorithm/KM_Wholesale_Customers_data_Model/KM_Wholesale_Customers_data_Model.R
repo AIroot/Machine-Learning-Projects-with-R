@@ -141,3 +141,18 @@ WholesaleData_Clusters_N$size
 # Check the coordinates of the cluster centroids 
 WholesaleData_Clusters_N$centers
 
+
+# Improving model
+# Add clusters to the data frame
+Remove_Top_Five$cluster <- WholesaleData_Clusters_N$cluster
+
+# Check how the cluster relates to channel and region characteristics
+Remove_Top_Five[1:5, c("cluster", "Channel", "Region")] 
+
+# Use aggregate() functions
+aggregate(data = Remove_Top_Five, Channel ~ cluster, mean)
+
+# use aggregate() to check cluster and feamales
+aggregate(data = Remove_Top_Five, Region ~ cluster, mean)
+
+
