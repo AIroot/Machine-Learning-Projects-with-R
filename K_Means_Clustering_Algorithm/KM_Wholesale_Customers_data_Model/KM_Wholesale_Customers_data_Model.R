@@ -156,3 +156,52 @@ aggregate(data = Remove_Top_Five, Channel ~ cluster, mean)
 aggregate(data = Remove_Top_Five, Region ~ cluster, mean)
 
 
+
+# Elbow method for determining the optimal number of clusters
+set.seed(123)
+# Compute and plot wss for k = 2 to k = 15
+k.max <- 15 # Maximal number of clusters
+wss <- sapply(1:k.max, 
+        function(k){kmeans(WholesaleData_n, k, nstart=10 )$tot.withinss})
+plot(1:k.max, wss,
+       type="b", pch = 19, frame = FALSE, 
+       xlab="Number of clusters K",
+       ylab="Total within-clusters sum of squares")
+abline(v = 5, lty =2)
+
+# Apply kmeans() functions for normalizing numeric data with optimal K=5
+set.seed(2345)
+
+WholesaleData_Clusters <- kmeans(WholesaleData_n, 5)
+
+
+# Visualize k-means clusters
+clusplot(WholesaleData_n, WholesaleData_Clusters$cluster, color=TRUE, shade=TRUE,labels=2, lines=0)
+points(WholesaleData_Clusters_N$centers, pch=3, cex=2) 
+
+# Centroid plot 
+library(fpc)
+plotcluster(WholesaleData_n, WholesaleData_Clusters$cluster)
+
+
+# Evaluating model performance
+# The basic ways to evaluate the cluster is size of cluster. 
+WholesaleData_Clusters$size 
+
+# Check the coordinates of the cluster centroids 
+WholesaleData_Clusters$centers
+
+
+# Improving model
+# Add clusters to the data frame
+Remove_Top_Five$cluster <- WholesaleData_Clusters$cluster
+
+# Check how the cluster relates to channel and region characteristics
+Remove_Top_Five[1:5, c("cluster", "Channel", "Region")] 
+
+# Use aggregate() functions
+aggregate(data = Remove_Top_Five, Channel ~ cluster, mean)
+
+# use aggregate() to check cluster and feamales
+aggregate(data = Remove_Top_Five, Region ~ cluster, mean)
+
