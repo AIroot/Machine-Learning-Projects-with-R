@@ -102,3 +102,26 @@ for (i in c(3:8))
 
 
 summary(Remove_Top_Five)
+
+# Use normalize or z-score standardize
+ 
+WholesaleData_n <- as.data.frame(lapply(Remove_Top_Five[3:8], scale))
+
+summary(WholesaleData_n)
+
+# Train the model
+# Use R default stats package
+library(stats)
+library(cluster)
+library(NbClust)
+
+# The kmeans() function requires a data frame containing only numeric data
+# and a parameter specifying the desired number of clusters.
+
+
+# Apply kmeans() functions for normalizing numeric data
+set.seed(2345)
+
+WholesaleData_Clusters_N <- kmeans(WholesaleData_n, 4)
+
+
