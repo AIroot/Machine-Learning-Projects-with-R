@@ -42,154 +42,154 @@ str(MushroomData)
 # Create random sample
 # Divide the data into a training set and a test set randomly with ratio 75:25
 
-set.seed(123)
-train_sample <- sample(nrow(MushroomData), 0.7 * nrow(MushroomData))
-MushroomData_train <- MushroomData[train_sample, ]
-MushroomData_test <- MushroomData[-train_sample, ]
-table(MushroomData_test$class)
+# set.seed(123)
+# train_sample <- sample(nrow(MushroomData), 0.7 * nrow(MushroomData))
+# MushroomData_train <- MushroomData[train_sample, ]
+# MushroomData_test <- MushroomData[-train_sample, ]
+# table(MushroomData_test$class)
 
 
 
-# Apply model.matrix for all variables to create dummy variables
-MushroomData_train_m <- model.matrix(~cap_shape+cap_surface+cap_color+bruises+odor+
-							gill_attachment+gill_spacing+gill_size+gill_color+stalk_shape+
-							stalk_root+stalk_surface_above_ring+stalk_surface_below_ring+
-							stalk_color_above_ring+stalk_color_below_ring+veil_type+veil_color+
-							ring_number+ring_type+spore_print_color+population+habitat+class, data=MushroomData_train)
+# # Apply model.matrix for all variables to create dummy variables
+# MushroomData_train_m <- model.matrix(~cap_shape+cap_surface+cap_color+bruises+odor+
+# 							gill_attachment+gill_spacing+gill_size+gill_color+stalk_shape+
+# 							stalk_root+stalk_surface_above_ring+stalk_surface_below_ring+
+# 							stalk_color_above_ring+stalk_color_below_ring+veil_type+veil_color+
+# 							ring_number+ring_type+spore_print_color+population+habitat+class, data=MushroomData_train)
 
 
-colnames(MushroomData_train_m)
+# colnames(MushroomData_train_m)
 
-MushroomData_test_m <- model.matrix(~cap_shape+cap_surface+cap_color+bruises+odor+
-							gill_attachment+gill_spacing+gill_size+gill_color+stalk_shape+
-							stalk_root+stalk_surface_above_ring+stalk_surface_below_ring+
-							stalk_color_above_ring+stalk_color_below_ring+veil_type+veil_color+
-							ring_number+ring_type+spore_print_color+population+habitat+class, data=MushroomData_test)
-
-
-colnames(MushroomData_test_m)
-
-# combine the column names and then tack on the response variable
-col_list <- paste(c(colnames(MushroomData_train_m[,-c(1,98)])), collapse="+")
-
-col_list <- paste(c("classp~", col_list), collapse="")
-
-# create formula for ANN model
-f <- formula(col_list)
+# MushroomData_test_m <- model.matrix(~cap_shape+cap_surface+cap_color+bruises+odor+
+# 							gill_attachment+gill_spacing+gill_size+gill_color+stalk_shape+
+# 							stalk_root+stalk_surface_above_ring+stalk_surface_below_ring+
+# 							stalk_color_above_ring+stalk_color_below_ring+veil_type+veil_color+
+# 							ring_number+ring_type+spore_print_color+population+habitat+class, data=MushroomData_test)
 
 
+# colnames(MushroomData_test_m)
 
-# Train model
+# # combine the column names and then tack on the response variable
+# col_list <- paste(c(colnames(MushroomData_train_m[,-c(1,98)])), collapse="+")
 
-# NeuralNet 
-# # Training a model on the data
-# The neuralnet package can be installed via the install.packages("neuralnet") and 
-# loaded with the library(neuralnet) command.
-library(neuralnet)
-set.seed(8896329)
-# The model is used to train simplest multilayer feedforward network 
-#with only a single hidden node
-# By default, using the Resilient Backpropogation algorithm (RPROP+).
+# col_list <- paste(c("classp~", col_list), collapse="")
 
-# Model 01
-Mushroom_Data_model <- neuralnet(f, data=MushroomData_train_m, hidden = 1,
-						threshold = 0.01,
-						learningrate.limit = NULL,
-						learningrate.factor = list(minus = 0.5, plus = 1.2),
-						algorithm = "rprop+")
-plot(Mushroom_Data_model)
-Mushroom_Data_model$result.matrix
-
-# Evaluating model performance
-model_results <- compute(Mushroom_Data_model, MushroomData_test_m[,-c(1,98)], rep=1)
-Predicted_class <- model_results$net.result
-summary(model_results)
-
-# cor() function is used to obtain a correlation between two numeric vectors
-cor(Predicted_class, MushroomData_test_m[,98])
-
-# Model 02
-#Changing Hidden Nodes and Backprop
-
-Mushroom_Data_model2 <- neuralnet(f, data=MushroomData_train_m, hidden = 5)
-plot(Mushroom_Data_model2)
-Mushroom_Data_model2$result.matrix
-
-# Evaluating model performance
-model_results2 <- compute(Mushroom_Data_model2, MushroomData_test_m[,-c(1,98)], rep=1)
-Predicted_class2 <- model_results2$net.result
-summary(model_results2)
-
-# cor() function is used to obtain a correlation between two numeric vectors
-cor(Predicted_class2, MushroomData_test_m[,98])
-
-# Model 03
-#Multiple hidden layers
-
-Mushroom_Data_model3 <- neuralnet(f, data=MushroomData_train_m,
-								 , algorithm = "rprop+" ,hidden = c(10,3),
-								 threshold = 0.01)
-plot(Mushroom_Data_model3)
-Mushroom_Data_model3$result.matrix
-
-# Evaluating model performance
-model_results3 <- compute(Mushroom_Data_model3, MushroomData_test_m[,-c(1,98)], rep=1)
-Predicted_class3 <- model_results3$net.result
-summary(model_results3)
-
-# cor() function is used to obtain a correlation between two numeric vectors
-cor(Predicted_class3, MushroomData_test_m[,98])
-
-# Model 04
-#Multiple hidden layers
-
-Mushroom_Data_model4 <- neuralnet(f, data=MushroomData_train_m,
-								 , algorithm = "rprop+" ,hidden = c(10,5,3),
-								 threshold = 0.01, act.fct = "logistic")
-plot(Mushroom_Data_model4)
-Mushroom_Data_model4$result.matrix
-
-# Evaluating model performance
-model_results4 <- compute(Mushroom_Data_model4, MushroomData_test_m[,-c(1,98)])
-Predicted_class4 <- model_results4$net.result
-summary(model_results4)
-
-# cor() function is used to obtain a correlation between two numeric vectors
-cor(Predicted_class4, MushroomData_test_m[,98])
+# # create formula for ANN model
+# f <- formula(col_list)
 
 
-# Model 05
+
+# # Train model
+
+# # NeuralNet 
+# # # Training a model on the data
+# # The neuralnet package can be installed via the install.packages("neuralnet") and 
+# # loaded with the library(neuralnet) command.
+# library(neuralnet)
+# set.seed(8896329)
+# # The model is used to train simplest multilayer feedforward network 
+# #with only a single hidden node
+# # By default, using the Resilient Backpropogation algorithm (RPROP+).
+
+# # Model 01
+# Mushroom_Data_model <- neuralnet(f, data=MushroomData_train_m, hidden = 1,
+# 						threshold = 0.01,
+# 						learningrate.limit = NULL,
+# 						learningrate.factor = list(minus = 0.5, plus = 1.2),
+# 						algorithm = "rprop+")
+# plot(Mushroom_Data_model)
+# Mushroom_Data_model$result.matrix
+
+# # Evaluating model performance
+# model_results <- compute(Mushroom_Data_model, MushroomData_test_m[,-c(1,98)], rep=1)
+# Predicted_class <- model_results$net.result
+# summary(model_results)
+
+# # cor() function is used to obtain a correlation between two numeric vectors
+# cor(Predicted_class, MushroomData_test_m[,98])
+
+# # Model 02
+# #Changing Hidden Nodes and Backprop
+
+# Mushroom_Data_model2 <- neuralnet(f, data=MushroomData_train_m, hidden = 5)
+# plot(Mushroom_Data_model2)
+# Mushroom_Data_model2$result.matrix
+
+# # Evaluating model performance
+# model_results2 <- compute(Mushroom_Data_model2, MushroomData_test_m[,-c(1,98)], rep=1)
+# Predicted_class2 <- model_results2$net.result
+# summary(model_results2)
+
+# # cor() function is used to obtain a correlation between two numeric vectors
+# cor(Predicted_class2, MushroomData_test_m[,98])
+
+# # Model 03
+# #Multiple hidden layers
+
+# Mushroom_Data_model3 <- neuralnet(f, data=MushroomData_train_m,
+# 								 , algorithm = "rprop+" ,hidden = c(10,3),
+# 								 threshold = 0.01)
+# plot(Mushroom_Data_model3)
+# Mushroom_Data_model3$result.matrix
+
+# # Evaluating model performance
+# model_results3 <- compute(Mushroom_Data_model3, MushroomData_test_m[,-c(1,98)], rep=1)
+# Predicted_class3 <- model_results3$net.result
+# summary(model_results3)
+
+# # cor() function is used to obtain a correlation between two numeric vectors
+# cor(Predicted_class3, MushroomData_test_m[,98])
+
+# # Model 04
+# #Multiple hidden layers
+
+# Mushroom_Data_model4 <- neuralnet(f, data=MushroomData_train_m,
+# 								 , algorithm = "rprop+" ,hidden = c(10,5,3),
+# 								 threshold = 0.01, act.fct = "logistic")
+# plot(Mushroom_Data_model4)
+# Mushroom_Data_model4$result.matrix
+
+# # Evaluating model performance
+# model_results4 <- compute(Mushroom_Data_model4, MushroomData_test_m[,-c(1,98)])
+# Predicted_class4 <- model_results4$net.result
+# summary(model_results4)
+
+# # cor() function is used to obtain a correlation between two numeric vectors
+# cor(Predicted_class4, MushroomData_test_m[,98])
 
 
-Mushroom_Data_model5 <- neuralnet(f, data=MushroomData_train_m,
-								 , algorithm = "rprop+" ,hidden = c(10,5,3),
-								 threshold = 0.01, act.fct = "tanh")
-plot(Mushroom_Data_model5)
-Mushroom_Data_model5$result.matrix
+# # Model 05
 
-# Evaluating model performance
-model_results5 <- compute(Mushroom_Data_model5, MushroomData_test_m[,-c(1,98)])
-Predicted_class5 <- model_results5$net.result
-summary(model_results5)
 
-# cor() function is used to obtain a correlation between two numeric vectors
-cor(Predicted_class5, MushroomData_test_m[,98])
+# Mushroom_Data_model5 <- neuralnet(f, data=MushroomData_train_m,
+# 								 , algorithm = "rprop+" ,hidden = c(10,5,3),
+# 								 threshold = 0.01, act.fct = "tanh")
+# plot(Mushroom_Data_model5)
+# Mushroom_Data_model5$result.matrix
 
-# Model 06
+# # Evaluating model performance
+# model_results5 <- compute(Mushroom_Data_model5, MushroomData_test_m[,-c(1,98)])
+# Predicted_class5 <- model_results5$net.result
+# summary(model_results5)
 
-sigmoid = function(x) {
-  1 / (1 + exp(-x))
-}
-Mushroom_Data_model6 <- neuralnet(f, data=MushroomData_train_m,
-								 , algorithm = "rprop+" ,hidden = c(12,6,3),
-								 threshold = 0.01, act.fct = sigmoid)
-plot(Mushroom_Data_model6)
-Mushroom_Data_model6$result.matrix
+# # cor() function is used to obtain a correlation between two numeric vectors
+# cor(Predicted_class5, MushroomData_test_m[,98])
 
-# Evaluating model performance
-model_results6 <- compute(Mushroom_Data_model6, MushroomData_test_m[,-c(1,98)])
-Predicted_class6 <- model_results6$net.result
-summary(model_results6)
+# # Model 06
 
-# cor() function is used to obtain a correlation between two numeric vectors
-cor(Predicted_class6, MushroomData_test_m[,98])
+# sigmoid = function(x) {
+#   1 / (1 + exp(-x))
+# }
+# Mushroom_Data_model6 <- neuralnet(f, data=MushroomData_train_m,
+# 								 , algorithm = "rprop+" ,hidden = c(12,6,3),
+# 								 threshold = 0.01, act.fct = sigmoid)
+# plot(Mushroom_Data_model6)
+# Mushroom_Data_model6$result.matrix
+
+# # Evaluating model performance
+# model_results6 <- compute(Mushroom_Data_model6, MushroomData_test_m[,-c(1,98)])
+# Predicted_class6 <- model_results6$net.result
+# summary(model_results6)
+
+# # cor() function is used to obtain a correlation between two numeric vectors
+# cor(Predicted_class6, MushroomData_test_m[,98])
